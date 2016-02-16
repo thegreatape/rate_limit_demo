@@ -2,7 +2,7 @@ defmodule RateLimitDemo.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", RateLimitDemo.RoomChannel
+  channel "hits*", RateLimitDemo.HitChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
