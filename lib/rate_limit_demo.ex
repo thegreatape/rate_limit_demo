@@ -13,6 +13,7 @@ defmodule RateLimitDemo do
       supervisor(RateLimitDemo.Repo, []),
       # Here you could define other workers and supervisors as children
       worker(RateLimitDemo.HitCounter, []),
+      worker(RateLimitDemo.Limiter, [:one_per_second, %{rate: 1, unit: :second}]),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

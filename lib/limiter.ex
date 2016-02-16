@@ -2,8 +2,8 @@ defmodule RateLimitDemo.Limiter do
   use GenServer
   alias Timex.Time
 
-  def start_link(params) do
-    GenServer.start_link(__MODULE__, params, [])
+  def start_link(name, params) do
+    GenServer.start_link(__MODULE__, params, name: name)
   end
 
   def invoke(server, module, func, args) do
