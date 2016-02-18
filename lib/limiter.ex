@@ -14,6 +14,13 @@ defmodule RateLimitDemo.Limiter do
     GenServer.call(server, :check_queue)
   end
 
+  def ms_to_next_token(state) do
+    needed_fractional_token = 1.0 - (state.tokens - Float.floor(state.tokens))
+    fractional_arrival_rate = unit_to_ms(state.unit) / state.rate
+
+    round(needed_fractional_token * fractional_arrival_rate)
+  end
+
   def refill(state, current_time) do
     delta_time = current_time - state.last_updated_at
     new_tokens = (state.rate * delta_time) / unit_to_ms(state.unit)
@@ -26,14 +33,14 @@ defmodule RateLimitDemo.Limiter do
     if state.tokens >= 1 do
       state = case state.queue do
         [{module, func, args} | rest] ->
-          state = %{state | tokens: state.tokens - 1, queue: rest}
+          state = %{state | tokens: state.tokens - 1.0, queue: rest}
           spawn(module, func, args)
           work(state)
         [] -> state
       end
     else
       # schedule wake-up in time to next token
-      :timer.apply_after(1000, __MODULE__, :check_queue, [self])
+      :timer.apply_after(ms_to_next_token(state), __MODULE__, :check_queue, [self])
     end
     state
   end
