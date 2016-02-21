@@ -40,8 +40,4 @@ defmodule RateLimitServerTest do
     state = %{tokens: 0.9, rate: 20, unit: :second}
     assert_in_delta Limiter.ms_to_next_token(state), 5, 0.00000001
   end
-
-  test "calling functions with limits" do
-
-  end
 end

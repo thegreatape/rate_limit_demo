@@ -11,4 +11,8 @@ defmodule RateLimitDemo.HitCounter do
   def current_hits do
     Agent.get(__MODULE__, &(&1))
   end
+
+  def reset do
+    Agent.update(__MODULE__, fn _ -> 0 end)
+  end
 end
